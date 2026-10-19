@@ -2,9 +2,12 @@ plugins {
     id 'com.android.application'
 }
 
-// CI writes the signing key here from a repo secret. Keeping the same key means
-// new builds install as updates over old ones instead of needing an uninstall.
+// The signing key is committed on purpose (personal sideloaded app). Keeping the same
+// key means new builds install as updates over old ones instead of needing an uninstall.
 def releaseKeystore = file('release.jks')
+def signingProps = new Properties()
+if (file('signing.properties').exists()) file('signing.properties').withInputStream { signingProps.load(it) }
+def keystorePassword = System.getenv('KEYSTORE_PASSWORD') ?: signingProps.getProperty('storePassword')
 def runNumber = (System.getenv('GITHUB_RUN_NUMBER') ?: '1').toInteger()
 
 android {
@@ -23,9 +26,9 @@ android {
         release {
             if (releaseKeystore.exists()) {
                 storeFile releaseKeystore
-                storePassword System.getenv('KEYSTORE_PASSWORD')
+                storePassword keystorePassword
                 keyAlias 'dayssince'
-                keyPassword System.getenv('KEYSTORE_PASSWORD')
+                keyPassword keystorePassword
             }
         }
     }

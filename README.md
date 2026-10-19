@@ -19,7 +19,7 @@ Updates: install the newer APK the same way; it replaces the old one and keeps y
 ## Build
 
 Every push to `main` builds a signed APK with GitHub Actions and publishes it as a release.
-The signing key lives in the `KEYSTORE_BASE64` / `KEYSTORE_PASSWORD` repo secrets; without
-them the build still works but uses a throwaway key (so it can't update an earlier install).
+The signing key (`app/release.jks`, password in `app/signing.properties`) is committed on
+purpose so every build can install as an update over the previous one.
 
 Locally: `gradle :app:assembleRelease` with Gradle 8.9+ and the Android SDK (platform 35).
