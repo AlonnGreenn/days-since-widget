@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Days Since</string>
+    <string name="widget_description">Days since something. Tap to reset or change the date.</string>
+
+    <color name="widget_bg">#F2FFFFFF</color>
+    <color name="widget_fg">#1C1B1F</color>
+    <color name="widget_fg_dim">#5F5B66</color>
+    <color name="icon_bg">#2E5E4E</color>
+
+    <dimen name="widget_radius">16dp</dimen>
+
+    <!-- Fully invisible host for the dialogs. -->
+    <style name="Invisible" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowNoDisplay">false</item>
+    </style>
+</resources>

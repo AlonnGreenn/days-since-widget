@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12+: follow the wallpaper (Material You) colors and system corner radius. -->
+<resources>
+    <color name="widget_bg">@android:color/system_accent2_50</color>
+    <color name="widget_fg">@android:color/system_accent1_900</color>
+    <color name="widget_fg_dim">@android:color/system_accent2_700</color>
+    <dimen name="widget_radius">@android:dimen/system_app_widget_background_radius</dimen>
+</resources>

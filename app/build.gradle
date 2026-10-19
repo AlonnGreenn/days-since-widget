@@ -1,0 +1,51 @@
+plugins {
+    id 'com.android.application'
+}
+
+// CI writes the signing key here from a repo secret. Keeping the same key means
+// new builds install as updates over old ones instead of needing an uninstall.
+def releaseKeystore = file('release.jks')
+def runNumber = (System.getenv('GITHUB_RUN_NUMBER') ?: '1').toInteger()
+
+android {
+    namespace 'dev.dayssince'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'dev.dayssince.widget'
+        minSdk 26
+        targetSdk 35
+        versionCode runNumber
+        versionName "1.0.${runNumber}"
+    }
+
+    signingConfigs {
+        release {
+            if (releaseKeystore.exists()) {
+                storeFile releaseKeystore
+                storePassword System.getenv('KEYSTORE_PASSWORD')
+                keyAlias 'dayssince'
+                keyPassword System.getenv('KEYSTORE_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig releaseKeystore.exists() ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
+
+// No dependencies: plain Android framework APIs only.
