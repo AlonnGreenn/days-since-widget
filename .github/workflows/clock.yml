@@ -1,0 +1,68 @@
+name: Build Clock Widget APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "clock-widget/**"
+      - ".github/workflows/clock.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+    working-directory: clock-widget
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.11.1
+
+      - name: Build
+        run: gradle --no-daemon :app:assembleRelease 2>&1 | tee ../build.log
+
+      - name: Rename APK
+        run: cp app/build/outputs/apk/release/app-release.apk ../clock.apk
+
+      # Stable phone-friendly link:
+      # https://github.com/<owner>/<repo>/releases/download/clock-latest/clock.apk
+      - name: Publish APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: clock-latest
+          name: Clock widget (latest build)
+          body: "Build ${{ github.run_number }} from ${{ github.sha }}"
+          files: clock.apk
+          make_latest: false
+
+      # On failure, surface the compiler errors (annotations + a downloadable log)
+      # so they can be read without logging in.
+      - name: Report errors
+        if: failure()
+        run: |
+          grep -E "^e: |error:|What went wrong|FAILED|Unresolved|Exception" -A2 ../build.log | head -c 60000 > ../errors.txt || true
+          head -n 40 ../errors.txt | while IFS= read -r line; do echo "::error::$line"; done
+      - name: Publish error log
+        if: failure()
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: clock-buildlog
+          name: Clock build log (last failure)
+          body: "Failed build ${{ github.run_number }} from ${{ github.sha }}"
+          files: |
+            build.log
+            errors.txt
+          make_latest: false

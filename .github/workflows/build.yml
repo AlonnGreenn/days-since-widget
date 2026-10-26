@@ -6,6 +6,8 @@ on:
     paths-ignore:
       - "newport-planner/**"
       - ".github/workflows/planner.yml"
+      - "clock-widget/**"
+      - ".github/workflows/clock.yml"
   workflow_dispatch:
 
 permissions:

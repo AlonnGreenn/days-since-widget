@@ -1,0 +1,5 @@
+<resources>
+    <string name="label_white">Clock – white</string>
+    <string name="label_blue">Clock – white on dark blue</string>
+    <string name="label_black">Clock – black</string>
+</resources>
