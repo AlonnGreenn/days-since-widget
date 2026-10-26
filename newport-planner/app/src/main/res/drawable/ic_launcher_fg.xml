@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A calendar page with half-hour lines and one placed block. 108dp adaptive canvas. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M36,34h36a4,4 0,0 1,4 4v34a4,4 0,0 1,-4 4h-36a4,4 0,0 1,-4 -4v-34a4,4 0,0 1,4 -4z" />
+    <path
+        android:fillColor="#FF1E3A5F"
+        android:pathData="M37,44h34v1.5h-34z M37,52h34v1.5h-34z M37,60h34v1.5h-34z M37,68h34v1.5h-34z" />
+    <path
+        android:fillColor="#FFF2A541"
+        android:pathData="M42,47h24a1.5,1.5 0,0 1,1.5 1.5v9a1.5,1.5 0,0 1,-1.5 1.5h-24a1.5,1.5 0,0 1,-1.5 -1.5v-9a1.5,1.5 0,0 1,1.5 -1.5z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M42,30h4v8h-4z M62,30h4v8h-4z" />
+</vector>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Planner" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/launcher_bg</item>
+    </style>
+    <color name="launcher_bg">#FF1E3A5F</color>
+</resources>
