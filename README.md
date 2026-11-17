@@ -23,3 +23,10 @@ The signing key (`app/release.jks`, password in `app/signing.properties`) is com
 purpose so every build can install as an update over the previous one.
 
 Locally: `gradle :app:assembleRelease` with Gradle 8.9+ and the Android SDK (platform 35).
+
+## Other apps in this repo
+
+- `clock-widget/` — clock widgets.
+- `newport-planner/` — planner.
+- `morning-timer/` — floating morning stopwatch with gentle reminder chimes. APK:
+  `https://github.com/AlonnGreenn/days-since-widget/releases/download/timer-latest/morning-timer.apk`
