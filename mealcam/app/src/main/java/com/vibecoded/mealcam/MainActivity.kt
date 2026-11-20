@@ -134,7 +134,7 @@ class MainActivity : ComponentActivity() {
         ui.removeCallbacks(tick)
     }
 
-    override fun onRequestPermissionsResult(code: Int, perms: Array<out String>, results: IntArray) {
+    override fun onRequestPermissionsResult(code: Int, perms: Array<String>, results: IntArray) {
         super.onRequestPermissionsResult(code, perms, results)
         if (hasCamera()) bindCamera()
     }
