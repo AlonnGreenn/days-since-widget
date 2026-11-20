@@ -8,6 +8,8 @@ on:
       - ".github/workflows/planner.yml"
       - "clock-widget/**"
       - ".github/workflows/clock.yml"
+      - "mealcam/**"
+      - ".github/workflows/mealcam.yml"
   workflow_dispatch:
 
 permissions:
