@@ -4,10 +4,9 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
-// Personal sideloaded app: the signing key is committed on purpose so every CI build
-// installs as an update over the previous one. The password is not a secret.
-val keystore = file("planner.jks")
-val keyPassword = "vibecoded-planner"
+// CI builds an UNSIGNED release APK. It is signed on the Inspiron with the key in
+// ~/.config/planner-signing/ (never uploaded anywhere): see tools/install.sh.
+// v0.1 was signed with a throwaway CI key, which is why v0.2 has a new applicationId.
 val runNumber = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInt()
 
 android {
@@ -15,28 +14,16 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.vibecoded.planner"
+        applicationId = "com.vibecoded.newportplanner"
         minSdk = 26
         targetSdk = 35
         versionCode = runNumber
-        versionName = "0.1.$runNumber"
-    }
-
-    signingConfigs {
-        create("release") {
-            if (keystore.exists()) {
-                storeFile = keystore
-                storePassword = keyPassword
-                keyAlias = "planner"
-                this.keyPassword = keyPassword
-            }
-        }
+        versionName = "0.2.$runNumber"
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            signingConfig = if (keystore.exists()) signingConfigs.getByName("release") else signingConfigs.getByName("debug")
         }
     }
 

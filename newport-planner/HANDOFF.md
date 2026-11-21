@@ -9,9 +9,13 @@ item either a time slot today or a later day. The original request is in `docs/O
 - Repo: `AlonnGreenn/days-since-widget` (meant to be renamed "vibe-coded-projects"; one folder per app).
   This app lives in `newport-planner/`. The older app at the repo root is the Days Since widget.
 - Build: `.github/workflows/planner.yml` builds on every push touching `newport-planner/**`.
-  - APK: `https://github.com/AlonnGreenn/days-since-widget/releases/download/planner-latest/planner.apk`
+  - CI publishes an **unsigned** `planner-unsigned.apk` at release `planner-latest`. Sign + install from the Inspiron:
+    `newport-planner/tools/install.sh <adb-device>` (key only in `~/.config/planner-signing/` there; never committed or uploaded,
+    since the repo is public and the app has all-files access).
   - On failure, the log is published at release tag `planner-buildlog` (`build.log`, `errors.txt`), readable without auth.
-- Signing key `app/planner.jks` is committed on purpose (password in `app/build.gradle.kts`) so builds install as updates.
+- applicationId `com.vibecoded.newportplanner` since v0.2. v0.1 (`com.vibecoded.planner`) was signed with a throwaway CI key
+  (`planner.jks` was gitignored, so CI fell back to a fresh debug key), so it could not be updated in place; its data was
+  migrated via its own .ics export (see status log).
 - Local sandbox can't reach Google Maven: only the pure Kotlin in `domain/` can be compiled/tested locally
   (`kotlinc` + JUnit jar). Everything else is verified by CI.
 
@@ -74,4 +78,7 @@ rewritten only when their content changes, so editing them in Obsidian does noth
 ## Status log
 
 - v0.1: first complete build (all features above). Used daily since 2026-10-26; "works great".
-- v0.2 (2026-11-21): vault copy + backup/restore. Built from the Inspiron (Claude Code), installed over adb.
+- v0.2 (2026-11-21): vault copy + backup/restore, new applicationId + Inspiron-only signing key.
+  Migration from v0.1: its .ics export → state.json (ids, dates, times, merged parts, deadlines, the 2 one-event calendars kept;
+  past items marked done; streak 20 / 1 skip rebuilt approximately; postpone counts lost; no reasons existed).
+  Old app disabled with `pm disable-user` (data kept; `pm enable com.vibecoded.planner` brings it back).

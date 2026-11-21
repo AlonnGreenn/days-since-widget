@@ -44,17 +44,16 @@ jobs:
         run: gradle --no-daemon :app:assembleRelease 2>&1 | tee -a ../build.log
 
       - name: Rename APK
-        run: cp app/build/outputs/apk/release/app-release.apk ../planner.apk
+        run: cp app/build/outputs/apk/release/app-release-unsigned.apk ../planner-unsigned.apk
 
-      # Stable phone-friendly link:
-      # https://github.com/<owner>/<repo>/releases/download/planner-latest/planner.apk
+      # Unsigned on purpose: sign + install from the Inspiron with newport-planner/tools/install.sh
       - name: Publish APK
         uses: softprops/action-gh-release@v2
         with:
           tag_name: planner-latest
           name: Planner (latest build)
           body: "Build ${{ github.run_number }} from ${{ github.sha }}"
-          files: planner.apk
+          files: planner-unsigned.apk
           make_latest: false
 
       # On failure, surface the compiler errors (annotations + a downloadable log)
