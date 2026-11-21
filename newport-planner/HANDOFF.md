@@ -23,6 +23,7 @@ item either a time slot today or a later day. The original request is in `docs/O
   `StateCodec` (org.json).
 - `system/` — notifications (morning cue + current/next block), Xiaomi badge reflection, exact alarms (next 05:30 and next block boundary),
   boot/time-change receivers. `SystemSync` re-derives all of it from state (debounced for UI, immediate for receivers).
+- `data/VaultMirror` + `domain/VaultExport` — one-way copy into the Obsidian vault (see below).
 - `ui/` — Jetpack Compose. `HomeScreen` (3 reorderable sections), `ScheduleScreen` (morning ritual),
   `PlacementOverlay` (the drag-and-drop target screen used everywhere), `SettingsScreen`.
 
@@ -32,6 +33,19 @@ A `Task` has `parts` (1 normally, several after merging blocks), optional `date`
 (minutes after 05:30). No date = to-do list. Date only = planned for that day. Date + start = a block. Days run 05:30→05:30.
 `Series` copies repeating items into real tasks 60 days ahead (`generatedThrough`), so single occurrences can be edited/deleted.
 Imported calendars are `CalendarSource`s; their events are tasks with `calendarId`.
+
+## Vault copy (v0.2)
+
+With "All files access" (asked once on first launch; Settings → Obsidian vault), every save also writes
+`/storage/emulated/0/vault/planner/` (Syncthing carries it to the other devices). One-way, app → vault; files are
+rewritten only when their content changes, so editing them in Obsidian does nothing.
+- `state.json`: byte-identical copy of the app's data file = the backup. A fresh install restores it automatically
+  (at start if access is already granted, else on the first resume after granting) — only when the app holds no data.
+  An empty state never overwrites a non-empty backup. Day-by-day history comes from the vault's daily git commit.
+- `Planner.md`: to-do list, unfinished earlier items, today, deadlines, next 30 days (links to day notes).
+- `days/YYYY-MM-DD.md`: one per day with items; frontmatter `date, weekday, items, done, morning_review`;
+  `- [x]` = marked done. Days from 30 back to 60 ahead are kept current; older ones are frozen history.
+- `calendar.ics`: every dated item (fixed DTSTAMP so it doesn't churn).
 
 ## Decisions made with the user (don't re-ask)
 
@@ -59,4 +73,5 @@ Imported calendars are `CalendarSource`s; their events are tasks with `calendarI
 
 ## Status log
 
-- v0.1: first complete build (all features above). Not yet tested on the user's phone.
+- v0.1: first complete build (all features above). Used daily since 2026-10-26; "works great".
+- v0.2 (2026-11-21): vault copy + backup/restore. Built from the Inspiron (Claude Code), installed over adb.

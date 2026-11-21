@@ -110,6 +110,17 @@ fun SettingsScreen(state: AppState, vm: PlannerViewModel, onClose: () -> Unit) {
             }
         }
 
+        Heading("Obsidian vault")
+        val vaultOk = android.os.Environment.isExternalStorageManager()
+        Text(
+            if (vaultOk) "Every change is copied to vault/planner/ (Planner.md, a note per day, calendar.ics, " +
+                "and state.json, the backup a reinstall restores from). The copy is read-only: edits there are overwritten."
+            else "Not saving to the vault: “All files access” is off.",
+            fontSize = 13.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        if (!vaultOk) SetupButton("Allow all files access") { com.vibecoded.planner.MainActivity.openVaultAccess(context) }
+
         Heading("Make it reliable on Xiaomi")
         Text(
             "MIUI / HyperOS stops background apps aggressively. Without these the 05:30 cue, " +
