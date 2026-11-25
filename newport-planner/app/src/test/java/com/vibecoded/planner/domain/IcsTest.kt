@@ -91,6 +91,20 @@ class IcsTest {
         assertEquals(3, Ics.parse(counted, zone, LocalDate.of(2026, 10, 26), LocalDate.of(2027, 1, 1)).occurrences.size)
     }
 
+    @Test fun oneOffEventsIgnoreWindowEnd() {
+        val ics = "BEGIN:VCALENDAR\nBEGIN:VEVENT\nUID:far\nSUMMARY:Passport expires\n" +
+            "DTSTART;VALUE=DATE:20300314\nDTEND;VALUE=DATE:20300315\nEND:VEVENT\n" +
+            "BEGIN:VEVENT\nUID:timed\nSUMMARY:Far meeting\nDTSTART:20351011T090000\nEND:VEVENT\n" +
+            "BEGIN:VEVENT\nUID:past\nSUMMARY:Old\nDTSTART;VALUE=DATE:20200101\nEND:VEVENT\n" +
+            "BEGIN:VEVENT\nUID:rep\nSUMMARY:Yearly\nDTSTART;VALUE=DATE:20261201\nRRULE:FREQ=YEARLY\nEND:VEVENT\n" +
+            "END:VCALENDAR"
+        val cal = Ics.parse(ics, zone, LocalDate.of(2026, 11, 24), LocalDate.of(2027, 11, 25))
+        assertEquals(LocalDate.of(2030, 3, 14), cal.occurrences.single { it.uid == "far" }.date)
+        assertEquals(LocalDateTime.of(2035, 10, 11, 9, 0), cal.occurrences.single { it.uid == "timed" }.start)
+        assertTrue(cal.occurrences.none { it.uid == "past" })
+        assertEquals(1, cal.occurrences.count { it.uid == "rep" }) // repeats still stop at windowEnd
+    }
+
     @Test fun exportRoundTrips() {
         val day = LocalDate.of(2026, 10, 26).toEpochDay()
         val tasks = listOf(

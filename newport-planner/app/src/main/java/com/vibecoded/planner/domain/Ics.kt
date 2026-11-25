@@ -27,6 +27,9 @@ data class IcsCalendar(val name: String?, val occurrences: List<IcsOccurrence>)
  * university timetable exports use: VEVENT, TZID/UTC/floating times, all-day events,
  * DTEND/DURATION, RRULE (DAILY/WEEKLY/MONTHLY/YEARLY with INTERVAL, COUNT, UNTIL, BYDAY),
  * EXDATE, RECURRENCE-ID overrides and cancelled events.
+ *
+ * [parse]'s window: repeating events are expanded only up to `windowEnd`; one-off events
+ * (no RRULE, not an override) are kept at any future date, e.g. document expiry dates years ahead.
  */
 object Ics {
 
@@ -91,17 +94,18 @@ object Ics {
                 }
             }
             if (!isOverride) overridden[uid]?.let { excluded += it }
+            val oneOff = rule == null && !isOverride // not limited by windowEnd
 
             for (z in expand(start.zoned, rule, windowEnd)) {
                 if (z.toInstant() in excluded) continue
                 val local = z.withZoneSameInstant(zone).toLocalDateTime()
                 if (start.allDay) {
                     val d = z.toLocalDate()
-                    if (d < windowStart || d > windowEnd) continue
+                    if (d < windowStart || (!oneOff && d > windowEnd)) continue
                     out += IcsOccurrence(uid, title, d, null, durationMin)
                 } else {
                     val d = local.toLocalDate()
-                    if (d < windowStart || d > windowEnd) continue
+                    if (d < windowStart || (!oneOff && d > windowEnd)) continue
                     out += IcsOccurrence(uid, title, null, local, durationMin)
                 }
             }

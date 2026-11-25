@@ -62,6 +62,7 @@ rewritten only when their content changes, so editing them in Obsidian does noth
   Items added after emptying don't bring it back until the next 05:30. No in-app notification banners.
 - Lock screen: one silent notification with today's current/next block; replaced when that block ends; swiping it away hides that block only.
 - Import/export `.ics` only (no sync). Re-importing a calendar with the same name asks: replace upcoming events or add separately.
+- `.ics` import window: repeating events are expanded only up to 1 year ahead; one-off events are kept at any future date (e.g. passport expiry years away).
 - Copy to-do list as markdown (to-do list only). Optional "why not done" note: a button, never prompted; exportable as markdown.
 - Repeat-postponement: gentle "Pushed N times" label, threshold configurable (default 3).
 - Streak = mornings where the list was emptied; 7 days in a row earns a skip (max 2). Minimal animation (a tick).
@@ -82,3 +83,4 @@ rewritten only when their content changes, so editing them in Obsidian does noth
   Migration from v0.1: its .ics export → state.json (ids, dates, times, merged parts, deadlines, the 2 one-event calendars kept;
   past items marked done; streak 20 / 1 skip rebuilt approximately; postpone counts lost; no reasons existed).
   Old app disabled with `pm disable-user` (data kept; `pm enable com.vibecoded.planner` brings it back).
+- 2026-11-25: one-off `.ics` events beyond the 1-year import window were silently dropped ("No events found"); now kept at any future date, repeats still capped at 1 year (`Ics.parse`, test `oneOffEventsIgnoreWindowEnd`).
